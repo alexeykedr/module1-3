@@ -9,14 +9,14 @@ public class Post {
     private LocalDateTime created;
     private LocalDateTime updated;
     private List<Label> labels;
-    private PostStatus status;
+    private Status status;
 
     //for create method
     public Post(int id,
                 String content,
                LocalDateTime created,
                 List<Label> labels,
-                PostStatus status) {
+                Status status) {
         this.id = id;
         this.content = content;
         this.created = created;
@@ -45,7 +45,7 @@ public class Post {
     }
 
     public LocalDateTime getCreated() {
-//        created = LocalDateTime.now();
+
         return created;
     }
 
@@ -70,11 +70,11 @@ public class Post {
         this.labels = labels;
     }
 
-    public PostStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(PostStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

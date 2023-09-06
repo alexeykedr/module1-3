@@ -1,5 +1,4 @@
 package org.example.view;
 
-
-public interface LabelView {
+public class LabelViewImpl implements LabelView{
 }
