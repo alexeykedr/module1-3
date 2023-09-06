@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GsonPostRepositoryImpl implements PostRepository{
+public class GsonPostRepositoryImpl implements PostRepository {
     List<Post> postsList = new ArrayList<>();
     List<Label> labels = new ArrayList<>();
     private int id = 1;
@@ -24,8 +24,7 @@ public class GsonPostRepositoryImpl implements PostRepository{
     Gson gson = new Gson();
 
     @Override
-    public List<Post> createPost(String content) {
-
+    public List<Post> create(String content) {
         Post post = new Post(id++,
                 content,
                 LocalDateTime.now(),
@@ -37,8 +36,9 @@ public class GsonPostRepositoryImpl implements PostRepository{
         return postsList;
     }
 
+
     @Override
-    public Post getPostById(int id) {
+    public Post getById(Integer id) {
         List<Post> postListInner = readerCollection(postsList);
 
         return postListInner.stream()
@@ -47,8 +47,9 @@ public class GsonPostRepositoryImpl implements PostRepository{
                 .orElse(null);
     }
 
+
     @Override
-    public void updatePostById(int id, String content) {
+    public void updateById(Integer id, String content) {
         List<Post> postListInner = readerCollection(postsList);
 
         List<Post> postListFiltered = postListInner.stream()
@@ -64,42 +65,26 @@ public class GsonPostRepositoryImpl implements PostRepository{
 
     }
 
-    @Override
-    public void deletePostById(int id) {
-        List<Post> postListInner = readerCollection(postsList);
 
-        List<Post> postListFiltered = postListInner.stream()
-                .filter(post -> id == post.getId())
-                .map(post -> {
-                    post.setStatus(PostStatus.DELETED);
-                    post.setUpdated(LocalDateTime.now());
-                    return post;
-                })
-                .collect(Collectors.toList());
+@Override
+public void deleteById(Integer id) {
+    List<Post> postListInner = readerCollection(postsList);
 
-        writerCollection(postListFiltered);
-    }
+    List<Post> postListFiltered = postListInner.stream()
+            .filter(post -> id == post.getId())
+            .map(post -> {
+                post.setStatus(PostStatus.DELETED);
+                post.setUpdated(LocalDateTime.now());
+                return post;
+            })
+            .collect(Collectors.toList());
+
+    writerCollection(postListFiltered);
+}
 
 
 
-    @Override
-    public List<Post> readerCollection(List<Post> listElement) {
-        try (FileReader reader = new FileReader(FILENAME)) {
-            //add collectionType instead single post.class
-
-            Type listType = new TypeToken<ArrayList<Post>>(){}.getType();
-            List<Post> result = gson.fromJson(reader, listType);
-            listElement.addAll(result);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e + "Exception reading of posts.json FNFEx");
-        } catch (IOException e) {
-            throw new RuntimeException(e + "Exception reading of posts.json IOEx");
-        }
-        return listElement;
-    }
-
-    @Override
-    public void writerCollection(List<Post> listElement) {
+    private void writerCollection(List<Post> listElement) {
         try (FileWriter writer = new FileWriter(FILENAME)) {
             writer.write(gson.toJson(listElement));
 
@@ -109,4 +94,24 @@ public class GsonPostRepositoryImpl implements PostRepository{
             throw new RuntimeException(e + "Exception writing of posts.json IOEx");
         }
     }
+
+    private List<Post> readerCollection(List<Post> listElement) {
+        try (FileReader reader = new FileReader(FILENAME)) {
+            Type listType = new TypeToken<ArrayList<Post>>() {
+            }.getType();
+            List<Post> result = gson.fromJson(reader, listType);
+            listElement.addAll(result);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e + "Exception reading of posts.json FNFEx");
+        } catch (IOException e) {
+            throw new RuntimeException(e + "Exception reading of posts.json IOEx");
+        }
+        return listElement;
+    }
 }
+    
+    
+
+
+    
+

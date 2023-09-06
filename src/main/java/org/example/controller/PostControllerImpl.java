@@ -12,23 +12,23 @@ public class PostControllerImpl implements PostController {
 
     @Override
     public List<Post> createPostUser(String content) {
-        return gsonPostRepository.createPost(content);
+        return gsonPostRepository.create(content);
     }
 
     @Override
     public Post getPost(int id) {
-        return gsonPostRepository.getPostById(id);
+        return gsonPostRepository.getById(id);
 
     }
 
     @Override
     public void updatePost(int id, String content) {
-        gsonPostRepository.updatePostById(id, content);
+        gsonPostRepository.updateById(id, content);
     }
 
     @Override
     public void deletePost(int id) {
-        gsonPostRepository.deletePostById(id);
+        gsonPostRepository.deleteById(id);
 
     }
 
