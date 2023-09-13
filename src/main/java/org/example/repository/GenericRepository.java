@@ -2,13 +2,12 @@ package org.example.repository;
 
 
 
-import org.example.model.Post;
-
 import java.util.List;
 
 public interface GenericRepository<T,ID> {
-    List<T> create(String content);
-    Object getById(ID id);
-    void updateById (ID id, String content);
+    List<T> getAll ();
+    T create(T t);
+    T getById(ID id);
+    T updateById (T t);
     void deleteById(ID id);
 }

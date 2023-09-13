@@ -8,24 +8,29 @@ public class Post {
     private String content;
     private LocalDateTime created;
     private LocalDateTime updated;
-    private List<Label> labels;
+    private List<Post> posts;
     private Status status;
 
     //for create method
     public Post(int id,
                 String content,
-               LocalDateTime created,
-                List<Label> labels,
+                LocalDateTime created,
+                List<Post> posts,
                 Status status) {
         this.id = id;
         this.content = content;
         this.created = created;
-        this.updated = updated;
-        this.labels = labels;
+//        this.updated = updated;
+        this.posts = posts;
         this.status = status;
     }
 
     public Post() {
+    }
+
+    public Post(int id, String content) {
+        this.id = id;
+        this.content = content;
     }
 
     public int getId() {
@@ -62,12 +67,12 @@ public class Post {
         this.updated = updated;
     }
 
-    public List<Label> getLabels() {
-        return labels;
+    public List<Post> getLabels() {
+        return posts;
     }
 
-    public void setLabels(List<Label> labels) {
-        this.labels = labels;
+    public void setLabels(List<Post> posts) {
+        this.posts = posts;
     }
 
     public Status getStatus() {
@@ -85,7 +90,7 @@ public class Post {
                 ", content='" + content + '\'' +
                 ", created=" + created +
                 ", updated=" + updated +
-                ", labels=" + labels +
+                ", posts=" + posts +
                 ", status=" + status +
                 '}';
     }

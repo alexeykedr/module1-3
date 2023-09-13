@@ -1,10 +1,10 @@
-package org.example.repository;
+package org.example.repository.gsonImpl;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.example.model.Label;
 import org.example.model.Post;
-import org.example.model.PostStatus;
+import org.example.model.Status;
+import org.example.repository.PostRepository;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,79 +14,89 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class GsonPostRepositoryImpl implements PostRepository {
-    List<Post> postsList = new ArrayList<>();
-    List<Label> labels = new ArrayList<>();
-    private int id = 1;
-    public static String FILENAME = "posts.json";
-    Gson gson = new Gson();
+
+    private final String FILE_PATH = "src/main/resources/posts.json";
+    private final Gson GSON = new Gson();
+
+        private List<Post> getAllItems() {
+        List<Post> listPost = new ArrayList<>();
+        return readerPostsFromJson(listPost);
+    }
+
+    private void writeAllItems(List<Post> posts) {
+        writerPostsToJson(posts);
+    }
+    @Override
+    public List<Post> getAll() {
+        return getAllItems();
+    }
+
 
     @Override
-    public List<Post> create(String content) {
-        Post post = new Post(id++,
-                content,
-                LocalDateTime.now(),
-                labels,
-                PostStatus.ACTIVE);
+    public Post create(Post postToCreate) {
+        List<Post> posts = getAllItems();
+        Integer id = generateID(posts);
 
-        postsList.add(post);
-        writerCollection(postsList);
-        return postsList;
+        posts.add(postToCreate);
+        return postToCreate;
     }
+
 
 
     @Override
     public Post getById(Integer id) {
-        List<Post> postListInner = readerCollection(postsList);
-
-        return postListInner.stream()
-                .filter(post -> id == post.getId())
-                .findFirst()
-                .orElse(null);
+       return getAllItems().stream()
+               .filter(item ->
+                       item.getId() == id
+               ).findFirst()
+               .orElse(null);
     }
 
 
     @Override
-    public void updateById(Integer id, String content) {
-        List<Post> postListInner = readerCollection(postsList);
+    public Post updateById(Post postToUpdate) {
 
-        List<Post> postListFiltered = postListInner.stream()
-                .filter(post -> id == post.getId())
-                .map(post -> {
-                    post.setContent(content);
-                    post.setUpdated(LocalDateTime.now());
-                    return post;
-                })
-                .collect(Collectors.toList());
+        List<Post> postListInner = getAllItems().stream()
+                .map(existingPost -> {
 
-        writerCollection(postListFiltered);
+                    if (existingPost.getId() == postToUpdate.getId()) {
+                   return postToUpdate;
+                    }
+                    return existingPost;
+                }).collect(Collectors.toList());
 
+        writeAllItems(postListInner);
+        //почему возвращаем postToUpdate а не postListInner?
+        return postToUpdate;
     }
 
 
-@Override
-public void deleteById(Integer id) {
-    List<Post> postListInner = readerCollection(postsList);
-
-    List<Post> postListFiltered = postListInner.stream()
-            .filter(post -> id == post.getId())
-            .map(post -> {
-                post.setStatus(PostStatus.DELETED);
-                post.setUpdated(LocalDateTime.now());
-                return post;
-            })
-            .collect(Collectors.toList());
-
-    writerCollection(postListFiltered);
-}
+    @Override
+    public void deleteById(Integer id) {
+        List<Post> postListInner = getAllItems().stream()
+                .map(p -> {
+                    if (p.getId() == id) {
+                        p.setStatus(Status.DELETED);
+                    }
+                    return p;
+                        }).collect(Collectors.toList());
+writeAllItems(postListInner);
+    }
 
 
+    private Integer generateID(List<Post> posts) {
+        return posts.stream()
+                .mapToInt(Post::getId)
+                .max().orElse(0) + 1;
+    }
 
-    private void writerCollection(List<Post> listElement) {
-        try (FileWriter writer = new FileWriter(FILENAME)) {
-            writer.write(gson.toJson(listElement));
+    private void writerPostsToJson(List<Post> listElement) {
+        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+            writer.write(GSON.toJson(listElement));
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e + "Exception writing of posts.json FNFEx");
@@ -95,11 +105,11 @@ public void deleteById(Integer id) {
         }
     }
 
-    private List<Post> readerCollection(List<Post> listElement) {
-        try (FileReader reader = new FileReader(FILENAME)) {
+    private List<Post> readerPostsFromJson(List<Post> listElement) {
+        try (FileReader reader = new FileReader(FILE_PATH)) {
             Type listType = new TypeToken<ArrayList<Post>>() {
             }.getType();
-            List<Post> result = gson.fromJson(reader, listType);
+            List<Post> result = GSON.fromJson(reader, listType);
             listElement.addAll(result);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e + "Exception reading of posts.json FNFEx");
@@ -108,6 +118,8 @@ public void deleteById(Integer id) {
         }
         return listElement;
     }
+
+
 }
     
     

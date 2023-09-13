@@ -5,11 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Writer {
-    private int id = 0;
-    private String firstName = "";
-    private String lastName = "";
+    private int id;
+    private String firstName;
+    private String lastName;
     private List<Post> posts = new ArrayList<>();
-    private PostStatus status = PostStatus.ACTIVE;
+    private Status status = Status.ACTIVE;
+
+    public Writer(int id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
 
     public int getId() {
@@ -44,11 +50,11 @@ public class Writer {
         this.posts = posts;
     }
 
-    public PostStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(PostStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

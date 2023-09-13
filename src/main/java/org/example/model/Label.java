@@ -1,14 +1,14 @@
 package org.example.model;
 
 public class Label {
-    private  int id = 0;
-    private  String name = "";
-    private PostStatus status = PostStatus.ACTIVE;
+    private  int id;
+    private  String name;
+    private Status status;
 
     public Label(int id, String nameLabel) {
         this.id = id;
         this.name = nameLabel;
-        status = PostStatus.ACTIVE;
+        status = Status.ACTIVE;
     }
 
     public int getId() {
@@ -27,11 +27,11 @@ public class Label {
         this.name = name;
     }
 
-    public PostStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(PostStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

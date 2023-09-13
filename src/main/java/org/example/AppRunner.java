@@ -1,9 +1,12 @@
 package org.example;
 
-import org.example.view.PostViewImpl;
+import org.example.view.menu.MainMenu;
 
-public class Main {
+public class AppRunner {
+
+
     public static void main(String[] args) {
-        new PostViewImpl().userMenu();
+        new MainMenu().menu();
     }
+
 }

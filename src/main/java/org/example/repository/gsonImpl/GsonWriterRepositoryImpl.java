@@ -34,7 +34,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
                 .max().orElse(0) + 1;
     }
     @Override
-    public List<Writer> getAll(Writer writer) {
+    public List<Writer> getAll() {
         return getAllItems();
     }
 
@@ -46,7 +46,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
         Integer id = generateID(writers);
 
         writers.add(writerToCreate);
-        return null;
+        return writerToCreate;
     }
 
 
@@ -65,7 +65,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
 
 
     @Override
-    public Writer update(Writer writerToUpdate) {
+    public Writer updateById(Writer writerToUpdate) {
         List<Writer> writerListInner = getAllItems().stream()
                 .map(existingWriter -> {
                     if (existingWriter.getId() == writerToUpdate.getId()) {

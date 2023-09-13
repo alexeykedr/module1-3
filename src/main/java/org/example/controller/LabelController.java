@@ -1,25 +1,36 @@
 package org.example.controller;
 
 import org.example.model.Label;
+import org.example.repository.LabelRepository;
+import org.example.repository.gsonImpl.GsonLabelRepositoryImpl;
 
-public class LabelControllerImpl implements LabelController{
-    @Override
-    public Label createLabel(int id, String nameLabel) {
-        return new Label(id, nameLabel);
+import java.util.List;
+
+public class LabelController {
+
+    private final LabelRepository labelRepository = new GsonLabelRepositoryImpl();
+
+    public Label createLabel(String nameLabel) {
+        Label label = new Label(0, nameLabel);
+        return labelRepository.create(label);
     }
 
-    @Override
-    public void getLabel(Label label) {
-
+    public Label updateLabelById(Integer id, String name) {
+        Label label = new Label(id, name);
+        label.setName(name);
+        return labelRepository.updateById(label);
     }
 
-    @Override
-    public void updateLabel(Label label) {
 
+    public Label getLabelById(Integer id){
+        return labelRepository.getById(id);
     }
 
-    @Override
-    public void deleteLabel(Label label) {
-
+    public List<Label> getAll() {
+        return labelRepository.getAll();
     }
+    public void deleteLabelById(Integer id){
+         labelRepository.getById(id);
+    }
+
 }
